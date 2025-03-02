@@ -64,6 +64,14 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+document.getElementById('close-upload-modal').onclick = function() {
+    closeModal(document.getElementById('upload-modal'));
+};
+
+document.getElementById('cancel-upload').onclick = function() {
+    closeModal(document.getElementById('upload-modal'));
+};
+
 // Initialize app - sử dụng biến photos từ photos.js
 function initialize() {
     // Show appPreloader

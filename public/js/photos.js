@@ -1172,5 +1172,19 @@ fetch(`/api/photos/${photo.id}/rename`, {
 });
 }
 
+// Thêm vào ui.js
+function closeModal(modal) {
+    console.log("Đóng modal:", modal);
+    if (modal) {
+        modal.classList.remove('show');
+    } else {
+        console.error("Modal không tồn tại");
+        // Nếu không tìm thấy modal, đóng tất cả các modal
+        document.querySelectorAll('.modal.show').forEach(m => {
+            m.classList.remove('show');
+        });
+    }
+}
+
 // Khởi tạo khi trang đã tải xong
 document.addEventListener('DOMContentLoaded', init);
