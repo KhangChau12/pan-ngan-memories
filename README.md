@@ -1,44 +1,51 @@
-# Ứng dụng Kỷ Niệm Gia Đình
+# Pan và Ngan - Ứng dụng Kỷ Niệm Tình Yêu
 
-Một trang web ảnh gia đình với thiết kế hiện đại và khả năng chia sẻ giữa nhiều thiết bị, được thiết kế theo phong cách Material Design với giao diện sang trọng và đầy đủ chức năng.
+Một trang web ảnh cá nhân cho Pan và Ngan với thiết kế hiện đại và khả năng chia sẻ giữa nhiều thiết bị, được thiết kế theo phong cách Material Design với giao diện sang trọng và đầy đủ chức năng.
 
 ## Tính năng chính
 
 1. **Upload ảnh nâng cao**:
    * Giao diện hiện đại với modal và preview
    * Tải nhiều ảnh cùng lúc
-   * Gán nhãn cho người trong ảnh (Anh Hai, Bo Bo, Ba, Mẹ)
+   * Gán nhãn cho người trong ảnh (Pan, Ngan, Cả hai)
+   * Thêm miêu tả/ghi chú để lưu giữ kỷ niệm đáng nhớ
 
-2. **Timeline chuyên nghiệp**:
-   * Ảnh được sắp xếp theo năm và ngày tháng
+2. **Timeline theo tháng**:
+   * Ảnh được sắp xếp theo tháng và ngày tháng, bắt đầu từ 08/2024
    * Hiệu ứng chuyển động mượt mà
-   * Hiển thị thông tin ngày chụp và người trong ảnh
+   * Hiển thị thông tin ngày chụp, người trong ảnh, và ghi chú
 
 3. **Bộ lọc thông minh**:
-   * Lọc theo năm
+   * Lọc theo tháng
    * Lọc theo người trong ảnh với giao diện badge hiện đại
 
 4. **Xem ảnh toàn màn hình**:
    * Chế độ slideshow với nút điều hướng
    * Hỗ trợ phím tắt (mũi tên trái/phải, ESC)
    * Hiệu ứng zoom khi hover
+   * Hiển thị ghi chú/miêu tả khi xem ảnh
 
-5. **Thông báo hệ thống**:
+5. **Đánh dấu yêu thích**:
+   * Đánh dấu ảnh yêu thích với biểu tượng trái tim
+   * Gallery slideshow cho ảnh yêu thích ở trang chủ
+   * Tính năng tự động chạy và dừng slideshow
+
+6. **Thông báo hệ thống**:
    * Thông báo đẹp mắt khi upload, xóa ảnh
    * Tự động biến mất sau vài giây
 
-6. **Giao diện responsive**:
+7. **Giao diện responsive**:
    * Hiển thị tốt trên mọi thiết bị (điện thoại, máy tính bảng, máy tính)
    * Layout thay đổi linh hoạt theo kích thước màn hình
 
-7. **Lưu trữ Google Drive**:
+8. **Lưu trữ Google Drive**:
    * Sử dụng Google Drive API để lưu trữ ảnh
    * Dữ liệu ảnh được lưu trữ an toàn
 
 ## Cấu trúc dự án
 
 ```
-family-photo-app/
+pan-ngan-photos/
 ├── public/
 │   ├── index.html          # File HTML chính
 │   ├── css/
@@ -68,8 +75,8 @@ family-photo-app/
 ### Cài đặt
 1. Clone repository
 ```bash
-git clone https://github.com/username/family-photo-app.git
-cd family-photo-app
+git clone https://github.com/username/pan-ngan-photos.git
+cd pan-ngan-photos
 ```
 
 2. Cài đặt các gói phụ thuộc
@@ -120,17 +127,22 @@ npm run dev
    - Upload file `service-account-key.json`
    - Mount vào đường dẫn `/opt/render/project/src/service-account-key.json`
 
-## Tùy chỉnh
+## Những thay đổi cụ thể
 
-- Thêm thành viên gia đình: Cập nhật các badge trong file `index.html` và các checkbox trong modal tải lên
-- Thay đổi theme màu: Chỉnh sửa các biến CSS trong file `styles.css`
-- Thêm năm vào bộ lọc: Cập nhật options trong select element
+Dự án này được cá nhân hóa từ dự án gốc "Kỷ Niệm Gia Đình" với những thay đổi chính:
+
+1. Đổi tên thành "Pan và Ngan" với chủ đề tình yêu
+2. Thay đổi từ groupby theo năm sang groupby theo tháng, bắt đầu từ tháng 8/2024
+3. Thêm tính năng nhập ghi chú/miêu tả cho mỗi ảnh
+4. Thay đổi palette màu sắc theo tone hồng, phù hợp với chủ đề tình yêu
+5. Cập nhật danh sách người trong ảnh: "Pan", "Ngan", "Cả hai"
 
 ## Lưu ý quan trọng
 
 - Ứng dụng này sử dụng Google Drive để lưu trữ ảnh, hãy đảm bảo bạn có đủ dung lượng lưu trữ
 - File `service-account-key.json` chứa thông tin nhạy cảm, không nên đưa vào repository công khai
 - Hãy đảm bảo đặt quyền truy cập phù hợp cho thư mục Google Drive
+- Ứng dụng lưu trữ metadata của ảnh (bao gồm miêu tả/ghi chú) trong JSON files trên Google Drive
 
 ## Giấy phép
 
