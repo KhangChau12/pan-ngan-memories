@@ -1,6 +1,6 @@
-// Biến toàn cục
-let photos = [];
-let filteredPhotos = [];
+// Biến toàn cục - đặt trên window để có thể truy cập từ các file khác
+window.photos = [];
+window.filteredPhotos = [];
 let favoritePhotos = [];
 let currentPhotoIndex = 0;
 let currentGalleryIndex = 0;
@@ -21,7 +21,7 @@ const uploadModal = document.getElementById('upload-modal');
 const fullscreenView = document.getElementById('fullscreen-view');
 const fullscreenImg = document.getElementById('fullscreen-img');
 const preloader = document.getElementById('preloader');
-const navUploadBtn = document.querySelector('.navbar-actions .btn'); // Thêm nút tải ảnh trên navbar
+const navUploadBtn = document.querySelector('.navbar-actions .btn'); 
 
 // Gallery elements
 const favoriteGalleryContainer = document.getElementById('favorite-gallery-container');
@@ -48,10 +48,10 @@ function init() {
         .then(response => response.json())
         .then(data => {
             // Lưu dữ liệu ảnh
-            photos = data;
+            window.photos = data;
             
             // Đảm bảo mỗi ảnh có thuộc tính monthYear
-            photos.forEach(photo => {
+            window.photos.forEach(photo => {
                 if (photo.date && !photo.monthYear) {
                     const photoDate = new Date(photo.date);
                     photo.monthYear = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
@@ -63,7 +63,7 @@ function init() {
             });
             
             // Lọc ảnh yêu thích
-            favoritePhotos = photos.filter(photo => photo.isFavorite === true);
+            favoritePhotos = window.photos.filter(photo => photo.isFavorite === true);
             
             // Ẩn preloader
             preloader.style.display = 'none';
@@ -367,16 +367,16 @@ function filterPhotos() {
     const selectedMonth = monthFilter.value;
     const selectedPerson = document.querySelector('.badge[data-person].active')?.dataset.person || 'all';
     
-    filteredPhotos = [...photos];
+    window.filteredPhotos = [...window.photos];
     
     // Lọc theo tháng
     if (selectedMonth !== 'all') {
-        filteredPhotos = filteredPhotos.filter(photo => photo.monthYear === selectedMonth);
+        window.filteredPhotos = window.filteredPhotos.filter(photo => photo.monthYear === selectedMonth);
     }
     
     // Lọc theo người
     if (selectedPerson !== 'all') {
-        filteredPhotos = filteredPhotos.filter(photo => photo.people && photo.people.includes(selectedPerson));
+        window.filteredPhotos = window.filteredPhotos.filter(photo => photo.people && photo.people.includes(selectedPerson));
     }
     
     // Hiển thị ảnh đã lọc
@@ -406,7 +406,7 @@ function renderTimeline() {
     childrenToRemove.forEach(child => child.remove());
     
     // Hiển thị/ẩn trạng thái trống
-    if (filteredPhotos.length === 0) {
+    if (window.filteredPhotos.length === 0) {
         emptyTimeline.style.display = 'block';
         return;
     } else {
@@ -415,7 +415,7 @@ function renderTimeline() {
     
     // Nhóm ảnh theo tháng
     const photosByMonth = {};
-    filteredPhotos.forEach(photo => {
+    window.filteredPhotos.forEach(photo => {
         // Đảm bảo tất cả các ảnh có thuộc tính monthYear
         if (!photo.monthYear && photo.date) {
             const photoDate = new Date(photo.date);
@@ -585,151 +585,151 @@ function createPhotoCard(photo) {
     const peopleElem = document.createElement('div');
     peopleElem.className = 'photo-people';
     
-    // Thêm badge cho mỗi người trong ảnh
-    if (photo.people && photo.people.length > 0) {
-        photo.people.forEach(person => {
-            const personBadge = document.createElement('span');
-            personBadge.className = 'person-badge';
-            personBadge.innerHTML = `<i class="fas fa-user"></i> ${person}`;
-            peopleElem.appendChild(personBadge);
-        });
-    }
-    
-    content.appendChild(photoName);
-    content.appendChild(dateElem);
-    
-    // Nếu có miêu tả, hiển thị nó
-    if (photo.description && photo.description.trim() !== '') {
-        const descriptionElem = document.createElement('div');
-        descriptionElem.className = 'photo-description';
-        descriptionElem.innerHTML = `<i class="fas fa-comment"></i> ${photo.description}`;
-        content.appendChild(descriptionElem);
-    }
-    
-    content.appendChild(peopleElem);
-    
-    card.appendChild(imgContainer);
-    card.appendChild(content);
-    
-    // Thêm sự kiện click để mở xem ảnh toàn màn hình
-    card.addEventListener('click', () => {
-        openFullscreen(photo);
+// Thêm badge cho mỗi người trong ảnh
+if (photo.people && photo.people.length > 0) {
+    photo.people.forEach(person => {
+        const personBadge = document.createElement('span');
+        personBadge.className = 'person-badge';
+        personBadge.innerHTML = `<i class="fas fa-user"></i> ${person}`;
+        peopleElem.appendChild(personBadge);
     });
-    
-    return card;
+}
+
+content.appendChild(photoName);
+content.appendChild(dateElem);
+
+// Nếu có miêu tả, hiển thị nó
+if (photo.description && photo.description.trim() !== '') {
+    const descriptionElem = document.createElement('div');
+    descriptionElem.className = 'photo-description';
+    descriptionElem.innerHTML = `<i class="fas fa-comment"></i> ${photo.description}`;
+    content.appendChild(descriptionElem);
+}
+
+content.appendChild(peopleElem);
+
+card.appendChild(imgContainer);
+card.appendChild(content);
+
+// Thêm sự kiện click để mở xem ảnh toàn màn hình
+card.addEventListener('click', () => {
+    openFullscreen(photo);
+});
+
+return card;
 }
 
 // Hàm đánh dấu/bỏ đánh dấu ảnh yêu thích
 function toggleFavorite(photo) {
-    // Cập nhật trạng thái yêu thích
-    const newState = !photo.isFavorite;
+// Cập nhật trạng thái yêu thích
+const newState = !photo.isFavorite;
+
+// Hiển thị preloader
+preloader.style.display = 'flex';
+preloader.querySelector('p').textContent = newState ? 'Đang thêm vào yêu thích...' : 'Đang bỏ yêu thích...';
+
+// Gọi API để cập nhật trạng thái
+fetch(`/api/photos/${photo.id}/favorite`, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ isFavorite: newState }),
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+})
+.then(data => {
+    // Cập nhật trạng thái local
+    photo.isFavorite = newState;
     
-    // Hiển thị preloader
-    preloader.style.display = 'flex';
-    preloader.querySelector('p').textContent = newState ? 'Đang thêm vào yêu thích...' : 'Đang bỏ yêu thích...';
-    
-    // Gọi API để cập nhật trạng thái
-    fetch(`/api/photos/${photo.id}/favorite`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isFavorite: newState }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+    // Cập nhật danh sách ảnh yêu thích
+    if (newState) {
+        // Thêm vào danh sách yêu thích nếu chưa có
+        if (!favoritePhotos.some(p => p.id === photo.id)) {
+            favoritePhotos.push(photo);
         }
-        return response.json();
-    })
-    .then(data => {
-        // Cập nhật trạng thái local
-        photo.isFavorite = newState;
-        
-        // Cập nhật danh sách ảnh yêu thích
+    } else {
+        // Xóa khỏi danh sách yêu thích
+        favoritePhotos = favoritePhotos.filter(p => p.id !== photo.id);
+    }
+    
+    // Cập nhật UI
+    const favoriteBtn = document.querySelector(`.photo-card[data-id="${photo.id}"] .favorite-toggle`);
+    if (favoriteBtn) {
         if (newState) {
-            // Thêm vào danh sách yêu thích nếu chưa có
-            if (!favoritePhotos.some(p => p.id === photo.id)) {
-                favoritePhotos.push(photo);
-            }
+            favoriteBtn.classList.add('active');
+            favoriteBtn.title = 'Bỏ yêu thích';
         } else {
-            // Xóa khỏi danh sách yêu thích
-            favoritePhotos = favoritePhotos.filter(p => p.id !== photo.id);
+            favoriteBtn.classList.remove('active');
+            favoriteBtn.title = 'Yêu thích';
         }
-        
-        // Cập nhật UI
-        const favoriteBtn = document.querySelector(`.photo-card[data-id="${photo.id}"] .favorite-toggle`);
-        if (favoriteBtn) {
-            if (newState) {
-                favoriteBtn.classList.add('active');
-                favoriteBtn.title = 'Bỏ yêu thích';
-            } else {
-                favoriteBtn.classList.remove('active');
-                favoriteBtn.title = 'Yêu thích';
-            }
-        }
-        
-        // Ẩn preloader
-        preloader.style.display = 'none';
-        
-        // Cập nhật gallery ảnh yêu thích
-        initFavoriteGallery();
-        
-        // Hiển thị thông báo thành công
-        showToast('Thành công', newState ? 'Đã thêm vào danh sách yêu thích' : 'Đã xóa khỏi danh sách yêu thích', 'success');
-    })
-    .catch(error => {
-        // Ẩn preloader
-        preloader.style.display = 'none';
-        
-        // Hiển thị thông báo lỗi
-        showToast('Lỗi', 'Không thể cập nhật trạng thái yêu thích: ' + error.message, 'error');
-    });
+    }
+    
+    // Ẩn preloader
+    preloader.style.display = 'none';
+    
+    // Cập nhật gallery ảnh yêu thích
+    initFavoriteGallery();
+    
+    // Hiển thị thông báo thành công
+    showToast('Thành công', newState ? 'Đã thêm vào danh sách yêu thích' : 'Đã xóa khỏi danh sách yêu thích', 'success');
+})
+.catch(error => {
+    // Ẩn preloader
+    preloader.style.display = 'none';
+    
+    // Hiển thị thông báo lỗi
+    showToast('Lỗi', 'Không thể cập nhật trạng thái yêu thích: ' + error.message, 'error');
+});
 }
 
 // Xử lý chọn file
 function handleFileSelect(e) {
-    const files = e.target.files;
-    if (files.length === 0) return;
-    
-    // Xóa các lựa chọn trước đó
-    selectedFilesContainer.innerHTML = '';
-    
-    // Hiển thị các file đã chọn
-    Array.from(files).forEach(file => {
-        const fileItem = document.createElement('div');
-        fileItem.className = 'selected-file';
-        fileItem.textContent = file.name;
-        selectedFilesContainer.appendChild(fileItem);
-    });
-    
-    // Cập nhật nhãn input file
-    const label = photoUploadInput.nextElementSibling;
-    label.textContent = files.length > 1 ? `${files.length} ảnh đã chọn` : files[0].name;
+const files = e.target.files;
+if (files.length === 0) return;
+
+// Xóa các lựa chọn trước đó
+selectedFilesContainer.innerHTML = '';
+
+// Hiển thị các file đã chọn
+Array.from(files).forEach(file => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'selected-file';
+    fileItem.textContent = file.name;
+    selectedFilesContainer.appendChild(fileItem);
+});
+
+// Cập nhật nhãn input file
+const label = photoUploadInput.nextElementSibling;
+label.textContent = files.length > 1 ? `${files.length} ảnh đã chọn` : files[0].name;
 }
 
 // Xử lý tải ảnh lên
 function handlePhotoUpload() {
-    const files = photoUploadInput.files;
-    if (files.length === 0) {
-        showToast('Lỗi', 'Vui lòng chọn ít nhất một ảnh', 'error');
-        return;
-    }
-    
-    const date = photoDateInput.value;
-    if (!date) {
-        showToast('Lỗi', 'Vui lòng chọn ngày chụp', 'error');
-        return;
-    }
-    
-    const people = [];
-    document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-        people.push(checkbox.value);
-    });
-    
+const files = photoUploadInput.files;
+if (files.length === 0) {
+    showToast('Lỗi', 'Vui lòng chọn ít nhất một ảnh', 'error');
+    return;
+}
+
+const date = photoDateInput.value;
+if (!date) {
+    showToast('Lỗi', 'Vui lòng chọn ngày chụp', 'error');
+    return;
+}
+
+const people = [];
+document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+    people.push(checkbox.value);
+});
+
 // Lấy nội dung miêu tả
 const description = photoDescriptionInput.value.trim();
-    
+
 // Hiển thị preloader
 preloader.style.display = 'flex';
 preloader.querySelector('p').textContent = 'Đang tải lên...';
@@ -769,7 +769,7 @@ Promise.all(uploadPromises)
     .then(newPhotos => {
         // Thêm ảnh mới vào mảng
         newPhotos.forEach(photo => {
-            photos.unshift(photo);
+            window.photos.unshift(photo);
         });
         
         // Reset form
@@ -861,9 +861,9 @@ fetch(`/api/photos/${photo.id}/description`, {
 })
 .then(data => {
     // Cập nhật trong mảng local
-    const index = photos.findIndex(p => p.id === photo.id);
+    const index = window.photos.findIndex(p => p.id === photo.id);
     if (index > -1) {
-        photos[index].description = data.photo.description;
+        window.photos[index].description = data.photo.description;
     }
     
     // Cập nhật trong mảng ảnh yêu thích nếu có
@@ -894,7 +894,7 @@ fetch(`/api/photos/${photo.id}/description`, {
 // Mở xem ảnh toàn màn hình
 function openFullscreen(photo) {
 // Tìm chỉ mục ảnh trong danh sách đã lọc
-currentPhotoIndex = filteredPhotos.findIndex(p => p.id === photo.id);
+currentPhotoIndex = window.filteredPhotos.findIndex(p => p.id === photo.id);
 
 // Kiểm tra URL ảnh
 let imgUrl = photo.url;
@@ -959,7 +959,7 @@ document.body.style.overflow = '';
 function showPrevPhoto() {
 if (currentPhotoIndex > 0) {
     currentPhotoIndex--;
-    const photo = filteredPhotos[currentPhotoIndex];
+    const photo = window.filteredPhotos[currentPhotoIndex];
     
     // Kiểm tra URL ảnh
     let imgUrl = photo.url;
@@ -976,9 +976,9 @@ if (currentPhotoIndex > 0) {
 
 // Hiển thị ảnh tiếp theo
 function showNextPhoto() {
-if (currentPhotoIndex < filteredPhotos.length - 1) {
+if (currentPhotoIndex < window.filteredPhotos.length - 1) {
     currentPhotoIndex++;
-    const photo = filteredPhotos[currentPhotoIndex];
+    const photo = window.filteredPhotos[currentPhotoIndex];
     
     // Kiểm tra URL ảnh
     let imgUrl = photo.url;
@@ -1047,9 +1047,9 @@ fetch(`/api/photos/${photo.id}`, {
 })
 .then(data => {
     // Xóa khỏi mảng local
-    const index = photos.findIndex(p => p.id === photo.id);
+    const index = window.photos.findIndex(p => p.id === photo.id);
     if (index > -1) {
-        photos.splice(index, 1);
+        window.photos.splice(index, 1);
     }
     
     // Xóa khỏi mảng ảnh yêu thích nếu có
@@ -1142,9 +1142,9 @@ fetch(`/api/photos/${photo.id}/rename`, {
 })
 .then(data => {
     // Cập nhật trong mảng local
-    const index = photos.findIndex(p => p.id === photo.id);
+    const index = window.photos.findIndex(p => p.id === photo.id);
     if (index > -1) {
-        photos[index].name = data.photo.name;
+        window.photos[index].name = data.photo.name;
     }
     
     // Cập nhật trong mảng ảnh yêu thích nếu có

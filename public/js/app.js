@@ -1,8 +1,3 @@
-// Global variables
-let photos = [];
-let filteredPhotos = []; 
-let currentPhotoIndex = 0;
-
 // DOM Elements
 const preloader = document.getElementById('preloader');
 const uploadForm = document.getElementById('upload-form');
@@ -66,7 +61,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Initialize app
+// Initialize app - sử dụng biến photos từ photos.js
 function initialize() {
     // Show preloader
     preloader.style.display = 'flex';
@@ -76,10 +71,11 @@ function initialize() {
     fetch('/api/photos')
         .then(response => response.json())
         .then(data => {
-            photos = data;
+            // Gán dữ liệu cho biến photos từ photos.js
+            window.photos = data;
             
             // Đảm bảo mỗi ảnh có thuộc tính monthYear
-            photos.forEach(photo => {
+            window.photos.forEach(photo => {
                 if (photo.date && !photo.monthYear) {
                     const photoDate = new Date(photo.date);
                     photo.monthYear = `${photoDate.getFullYear()}-${String(photoDate.getMonth() + 1).padStart(2, '0')}`;
@@ -90,9 +86,10 @@ function initialize() {
                 }
             });
             
+            // Gọi hàm filterPhotos từ photos.js
             filterPhotos();
             
-            if (photos.length === 0) {
+            if (window.photos.length === 0) {
                 emptyTimeline.style.display = 'block';
             } else {
                 emptyTimeline.style.display = 'none';
