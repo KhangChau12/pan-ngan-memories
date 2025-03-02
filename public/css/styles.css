@@ -1017,6 +1017,7 @@ a:hover {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-md);
     overflow: hidden;
+    min-height: 150px;
 }
 
 .favorite-gallery-header {

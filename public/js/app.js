@@ -1,5 +1,8 @@
 // DOM Elements
-const preloader = document.getElementById('preloader');
+let appPreloader; 
+document.addEventListener('DOMContentLoaded', function() {
+    appPreloader = document.getElementById('preloader');
+});
 const uploadForm = document.getElementById('upload-form');
 const photoUploadInput = document.getElementById('photo-upload');
 const photoDateInput = document.getElementById('photo-date');
@@ -63,9 +66,9 @@ document.addEventListener('keydown', (e) => {
 
 // Initialize app - sử dụng biến photos từ photos.js
 function initialize() {
-    // Show preloader
-    preloader.style.display = 'flex';
-    preloader.querySelector('p').textContent = 'Đang tải ảnh...';
+    // Show appPreloader
+    appPreloader.style.display = 'flex';
+    appPreloader.querySelector('p').textContent = 'Đang tải ảnh...';
     
     // Fetch photos from server
     fetch('/api/photos')
@@ -95,14 +98,14 @@ function initialize() {
                 emptyTimeline.style.display = 'none';
             }
             
-            // Hide preloader
-            preloader.style.display = 'none';
+            // Hide appPreloader
+            appPreloader.style.display = 'none';
         })
         .catch(error => {
             console.error('Error fetching photos:', error);
             showToast('Lỗi', 'Không thể tải dữ liệu ảnh', 'error');
             
-            // Hide preloader
-            preloader.style.display = 'none';
+            // Hide appPreloader
+            appPreloader.style.display = 'none';
         });
 }
