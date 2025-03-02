@@ -49,3 +49,17 @@ function showToast(title, message, type = 'success') {
     
     toastContainer.appendChild(toast);
 }
+
+// Thêm vào cuối file ui.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Tìm tất cả các nút đóng modal
+    document.querySelectorAll('[id="close-upload-modal"], [id="cancel-upload"]').forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Tìm modal gần nhất
+            const modal = document.getElementById('upload-modal');
+            if (modal) {
+                closeModal(modal);
+            }
+        });
+    });
+});
